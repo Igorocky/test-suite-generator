@@ -9,18 +9,22 @@ object TestCasesGenerator {
   def toString(combs: List[List[(String, String)]]) =
     combs.map(_.map { case (name, variant) => s"$name: $variant" }.mkString(", ")).mkString("\n")
 
-  def toFreeSpec(combs: List[List[(String, String)]], level: Int = 0): String = combs match {
-    case Nil => ""
-    case _ => {
-      assert(combs.forall(_.size == combs.head.size))
-      val prefix = " "*(level*2)
-      (for {
-        ((param, value), rest) <- groupByHead(combs.filter(_.nonEmpty))
-      } yield
-        s"""$prefix"$param: $value" ${if (rest.head.isEmpty) "in" else "-"} {
-           |$prefix${toFreeSpec(rest, level+1)}
-           |$prefix}""".stripMargin.replaceAllLiterally("\r\n", "\n")
-      ).mkString("\n")
+  def toFreeSpec(combs: List[List[(String, String)]], level: Int = 0, path: List[(String, String)] = Nil): String = {
+    val prefix = " "*(level*2)
+    combs match {
+      case List(Nil) =>
+        s"""|${prefix}//${path.reverse.map{case (p,v) => s"$p: $v"}.mkString(", ")}
+            |${prefix}pending""".stripMargin.replaceAllLiterally("\r\n", "\n")
+      case _ => {
+        assert(combs.forall(_.size == combs.head.size))
+        (for {
+          (t@(param, value), rest) <- groupByHead(combs.filter(_.nonEmpty))
+        } yield
+          s"""|$prefix"$param: $value" ${if (rest.head.isEmpty) "in" else "-"} {
+              |${toFreeSpec(rest, level+1, t::path)}
+              |$prefix}""".stripMargin.replaceAllLiterally("\r\n", "\n")
+          ).mkString("\n")
+      }
     }
   }
 

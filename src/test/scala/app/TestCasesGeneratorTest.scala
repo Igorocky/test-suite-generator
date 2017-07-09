@@ -70,23 +70,28 @@ class TestCasesGeneratorTest extends FreeSpec with Matchers {
     val res = TestCasesGenerator.toFreeSpec(combs)
 
     //then
+    println(res)
     res.replaceAllLiterally(" ", ".") should be(
       """"param1:.v1".-.{
         |.."param2:.v2".in.{
-        |..
+        |....//param1:.v1,.param2:.v2
+        |....pending
         |..}
         |}
         |"param1:.v2".-.{
         |.."param2:.v1".in.{
-        |..
+        |....//param1:.v2,.param2:.v1
+        |....pending
         |..}
         |.."param2:.v2".in.{
-        |..
+        |....//param1:.v2,.param2:.v2
+        |....pending
         |..}
         |}
         |"param1:.v3".-.{
         |.."param2:.v1".in.{
-        |..
+        |....//param1:.v3,.param2:.v1
+        |....pending
         |..}
         |}""".stripMargin.replaceAllLiterally("\r\n", "\n"))
   }

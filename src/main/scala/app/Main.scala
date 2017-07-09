@@ -15,7 +15,7 @@ object Main {
   }
 
   val TABLE = new Param {
-    override val name: String = "TABLE"
+    override val name: String = "table"
 
     val empty = value("empty")
     val nonEmpty = value("non-empty")
@@ -23,7 +23,7 @@ object Main {
   }
 
   val PARENT_ID = new Param {
-    override val name: String = "PARENT_ID"
+    override val name: String = "parentId"
 
     val none = value("None")
     val some = value("Some")
@@ -31,7 +31,7 @@ object Main {
   }
 
   val SIBLINGS = new Param {
-    override val name: String = "SIBLINGS"
+    override val name: String = "siblings"
 
     val yes = value("yes")
     val no = value("no")
@@ -53,7 +53,7 @@ object Main {
     )
 
     val combs: List[List[(String, String)]] = TestCasesGenerator.generateTestCases(params, impossible)
-    println(TestCasesGenerator.toString(combs))
+    println(TestCasesGenerator.toFreeSpec(combs))
   }
 
 }

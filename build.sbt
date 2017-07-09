@@ -2,8 +2,8 @@ val projVersion = "0.1-SNAPSHOT"
 val scalaV = "2.12.2"
 lazy val scalaTestVersion = "3.0.1"
 
-lazy val testSuitesGenerator = (project in file(".")).settings(
-  name := "test-suites-generator",
+lazy val testSuiteGenerator = (project in file(".")).settings(
+  name := "test-suite-generator",
   version := projVersion,
   scalaVersion := scalaV,
   libraryDependencies ++= Seq(
