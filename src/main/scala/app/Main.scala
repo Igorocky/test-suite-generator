@@ -53,7 +53,7 @@ object Main {
     )
 
     val combs: List[List[(String, String)]] = TestCasesGenerator.generateTestCases(params, impossible)
-    println(TestCasesGenerator.toFreeSpec(combs))
+    println(TestCasesGenerator.toFreeSpec2(combs))
   }
 
 }

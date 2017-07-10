@@ -14,19 +14,30 @@ object TestCasesGenerator {
     combs match {
       case List(Nil) =>
         s"""|${prefix}//${path.reverse.map{case (p,v) => s"$p: $v"}.mkString(", ")}
-            |${prefix}pending""".stripMargin.replaceAllLiterally("\r\n", "\n")
+            |${prefix}"test" in (pending)""".stripMargin.replaceAllLiterally("\r\n", "\n")
       case _ => {
         assert(combs.forall(_.size == combs.head.size))
         (for {
           (t@(param, value), rest) <- groupByHead(combs.filter(_.nonEmpty))
         } yield
-          s"""|$prefix"$param: $value" ${if (rest.head.isEmpty) "in" else "-"} {
+          s"""|$prefix"$param: $value" - {
               |${toFreeSpec(rest, level+1, t::path)}
               |$prefix}""".stripMargin.replaceAllLiterally("\r\n", "\n")
           ).mkString("\n")
       }
     }
   }
+
+  def toFreeSpec2(combs: List[List[(String, String)]], level: Int = 0, path: List[(String, String)] = Nil): String = {
+    for {
+      line <- combs
+      lineStr = line.map { case (p, v) => s"$p: $v" }.mkString(", ")
+      testCase =
+        s""""$lineStr" - {
+           |  "test" in (pending)
+           |}""".stripMargin
+    } yield testCase
+  }.mkString("\n").replaceAllLiterally("\r\n", "\n")
 
   protected[app] def groupByHead(combs: List[List[(String, String)]]): List[((String, String), List[List[(String, String)]])] = {
     combs.span(_.head == combs.head.head) match {

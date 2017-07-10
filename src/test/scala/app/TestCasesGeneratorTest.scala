@@ -70,29 +70,56 @@ class TestCasesGeneratorTest extends FreeSpec with Matchers {
     val res = TestCasesGenerator.toFreeSpec(combs)
 
     //then
-    println(res)
-    res.replaceAllLiterally(" ", ".") should be(
-      """"param1:.v1".-.{
-        |.."param2:.v2".in.{
-        |....//param1:.v1,.param2:.v2
-        |....pending
-        |..}
+    res should be(
+      """"param1: v1" - {
+        |  "param2: v2" - {
+        |    //param1: v1, param2: v2
+        |    "test" in (pending)
+        |  }
         |}
-        |"param1:.v2".-.{
-        |.."param2:.v1".in.{
-        |....//param1:.v2,.param2:.v1
-        |....pending
-        |..}
-        |.."param2:.v2".in.{
-        |....//param1:.v2,.param2:.v2
-        |....pending
-        |..}
+        |"param1: v2" - {
+        |  "param2: v1" - {
+        |    //param1: v2, param2: v1
+        |    "test" in (pending)
+        |  }
+        |  "param2: v2" - {
+        |    //param1: v2, param2: v2
+        |    "test" in (pending)
+        |  }
         |}
-        |"param1:.v3".-.{
-        |.."param2:.v1".in.{
-        |....//param1:.v3,.param2:.v1
-        |....pending
-        |..}
+        |"param1: v3" - {
+        |  "param2: v1" - {
+        |    //param1: v3, param2: v1
+        |    "test" in (pending)
+        |  }
+        |}""".stripMargin.replaceAllLiterally("\r\n", "\n"))
+  }
+
+  "TestCasesGenerator.toFreeSpec2 should produce correct output" in {
+    //given
+    val params = List(param1, param2)
+    val impossible: List[List[(Param, String)]] = List(
+      List(param1.v1, param2.v1)
+      ,List(param1.v3, param2.v2)
+    )
+
+    //when
+    val combs = TestCasesGenerator.generateTestCases(params, impossible)
+    val res = TestCasesGenerator.toFreeSpec2(combs)
+
+    //then
+    res should be(
+      """"param1: v1, param2: v2" - {
+        |  "test" in (pending)
+        |}
+        |"param1: v2, param2: v1" - {
+        |  "test" in (pending)
+        |}
+        |"param1: v2, param2: v2" - {
+        |  "test" in (pending)
+        |}
+        |"param1: v3, param2: v1" - {
+        |  "test" in (pending)
         |}""".stripMargin.replaceAllLiterally("\r\n", "\n"))
   }
 

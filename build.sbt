@@ -7,7 +7,8 @@ lazy val testSuiteGenerator = (project in file(".")).settings(
   version := projVersion,
   scalaVersion := scalaV,
   libraryDependencies ++= Seq(
-    "org.scalatest" %% "scalatest" % scalaTestVersion % Test
+    "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.6"
+    ,"org.scalatest" %% "scalatest" % scalaTestVersion % Test
     ,"org.scalacheck" %% "scalacheck" % "1.12.6" % Test
   ),
   libraryDependencies ++= Seq(
